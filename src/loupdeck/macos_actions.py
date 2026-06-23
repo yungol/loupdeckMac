@@ -4,7 +4,7 @@ Cada tipo de accion se resuelve por convencion: un metodo `_do_<type>`. Asi
 agregar una accion nueva es agregar un metodo, sin tocar el ruteo.
 
 Tipos soportados:
-  open    {"app": "Safari"}                       -> abre una app
+  open    {"app": "Safari", "new": false}         -> abre una app ("new": ventana nueva)
   url     {"url": "https://..."}                  -> abre una URL en el navegador
   shell   {"command": "..."}                      -> ejecuta un comando de shell
   volume  {"step": 5}                             -> sube/baja volumen (usa delta de perilla)
@@ -20,6 +20,13 @@ import subprocess
 from .actions import Action, ActionRunner
 
 log = logging.getLogger("loupdeck.macos")
+
+# Apps single-instance donde 'open -n -a' NO crea ventana: necesitan AppleScript
+# propio. Verificado en macOS via 'get id of every window' antes/despues.
+_NEW_WINDOW_SCRIPTS = {
+    "Terminal": 'tell application "Terminal" to do script ""',
+    "Finder": 'tell application "Finder" to make new Finder window',
+}
 
 
 def _osascript(script: str) -> str:
@@ -44,7 +51,19 @@ class MacActionRunner(ActionRunner):
 
     # --- handlers -----------------------------------------------------------
     def _do_open(self, params: dict, delta: int) -> None:
-        subprocess.Popen(["open", "-a", params["app"]])
+        app = params["app"]
+        if not params.get("new"):
+            subprocess.Popen(["open", "-a", app])
+            return
+        # Ventana NUEVA en cada press. Ojo: 'open -n' NO sirve para apps
+        # single-instance (verificado: con Terminal no abre nada, con Finder
+        # falla con 'Launch failed'). Cada una expone su propia sintaxis
+        # AppleScript para crear ventana; el resto de apps usan 'open -n -a'.
+        script = _NEW_WINDOW_SCRIPTS.get(app)
+        if script:
+            subprocess.Popen(["osascript", "-e", script])
+        else:
+            subprocess.Popen(["open", "-n", "-a", app])
 
     def _do_url(self, params: dict, delta: int) -> None:
         subprocess.Popen(["open", params["url"]])

@@ -30,9 +30,9 @@
         }
       },
       "keys": [
-        { "index": 0, "label": "Finder",   "icon": "folder",         "color": "#0078d7", "action": { "type": "open", "app": "Finder" } },
+        { "index": 0, "label": "Finder",   "icon": "folder",         "color": "#0078d7", "action": { "type": "open", "app": "Finder", "new": true } },
         { "index": 1, "label": "Safari",   "icon": "language",       "color": "#1a8cff", "action": { "type": "open", "app": "Safari" } },
-        { "index": 2, "label": "Terminal", "icon": "terminal",       "color": "#00b478", "action": { "type": "open", "app": "Terminal" } },
+        { "index": 2, "label": "Terminal", "icon": "terminal",       "color": "#00b478", "action": { "type": "open", "app": "Terminal", "new": true } },
         { "index": 3, "label": "TextEdit", "icon": "edit",           "color": "#ffaa00", "action": { "type": "open", "app": "TextEdit" } },
         { "index": 4, "label": "Notas",    "icon": "content_paste",  "color": "#ffcc00", "action": { "type": "open", "app": "Notes" } },
         { "index": 5, "label": "Music",    "icon": "music_note",     "color": "#28d860", "action": { "type": "open", "app": "Music" } },
