@@ -27,6 +27,13 @@
           "label": "LEDs",
           "color": "#1a8cff",
           "rotate": { "type": "button_brightness", "step": 0.1 }
+        },
+        "knobTR": {
+          "icon": "zoom_in",
+          "label": "Zoom",
+          "color": "#a06cff",
+          "rotate": { "type": "zoom", "step": 1 },
+          "press": { "type": "zoom_reset" }
         }
       },
       "keys": [
@@ -70,6 +77,13 @@
           "label": "LEDs",
           "color": "#1a8cff",
           "rotate": { "type": "button_brightness", "step": 0.1 }
+        },
+        "knobTR": {
+          "icon": "zoom_in",
+          "label": "Zoom",
+          "color": "#a06cff",
+          "rotate": { "type": "zoom", "step": 1 },
+          "press": { "type": "zoom_reset" }
         }
       },
       "keys": [

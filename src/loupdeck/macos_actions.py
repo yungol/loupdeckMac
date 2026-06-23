@@ -10,6 +10,8 @@ Tipos soportados:
   volume  {"step": 5}                             -> sube/baja volumen (usa delta de perilla)
   mute    {}                                      -> alterna silencio
   music   {"command": "playpause|next|previous"}  -> controla la app Music
+  zoom        {"step": 1}                         -> zoom de pantalla del sistema (usa delta)
+   zoom_reset  {}                              -> vuelve el zoom de pantalla al 100% (toggle Cmd+Shift+8 x2)
 """
 
 from __future__ import annotations
@@ -27,6 +29,23 @@ _NEW_WINDOW_SCRIPTS = {
     "Terminal": 'tell application "Terminal" to do script ""',
     "Finder": 'tell application "Finder" to make new Finder window',
 }
+
+# Zoom con Cmd (sin Shift ni Option). El usuario tiene estos atajos:
+#   Cmd+= acerca, Cmd+- aleja, Cmd+0 resetea a 100%.
+_ZOOM_IN_KEY = 24     # tecla "=" -> Cmd+= acerca
+_ZOOM_OUT_KEY = 27    # tecla "-" -> Cmd+- aleja
+_ZOOM_RESET_KEY = 82  # tecla "0" del teclado numerico -> Cmd+0 resetea a 100%
+
+
+def _zoom_keys(key_code: int, times: int) -> str:
+    """AppleScript que repite N veces el atajo de zoom (Cmd+<tecla>)."""
+    return (
+        'tell application "System Events"\n'
+        f"  repeat {times} times\n"
+        f"    key code {key_code} using {{command down}}\n"
+        "  end repeat\n"
+        "end tell"
+    )
 
 
 def _osascript(script: str) -> str:
@@ -93,6 +112,20 @@ class MacActionRunner(ActionRunner):
         _osascript(
             "set volume output muted not (output muted of (get volume settings))"
         )
+
+    def _do_zoom(self, params: dict, delta: int) -> None:
+        # Sin delta no hay direccion (p.ej. si se atara a un boton): no hacemos nada.
+        if not delta:
+            return
+        step = int(params.get("step", 1))
+        key = _ZOOM_IN_KEY if delta > 0 else _ZOOM_OUT_KEY
+        # |delta| clicks * step pulsaciones por click. Un solo osascript con el
+        # repeat adentro: una llamada aunque el giro sea de varios clicks.
+        _osascript(_zoom_keys(key, abs(delta) * step))
+
+    def _do_zoom_reset(self, params: dict, delta: int) -> None:
+        # Cmd+0 resetea el zoom a 100%.
+        _osascript(_zoom_keys(_ZOOM_RESET_KEY, 1))
 
     def _do_music(self, params: dict, delta: int) -> None:
         cmd = params.get("command", "playpause")

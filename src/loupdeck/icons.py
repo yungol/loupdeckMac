@@ -27,6 +27,7 @@ ICONS = {
     "headphones": 0xF01F, "dns": 0xE875, "extension": 0xE87B,
     "apps": 0xE5C3, "menu": 0xE5D2,
     "auto_awesome": 0xE65F,
+    "zoom_in": 0xE8FF, "zoom_out": 0xE901,
     # Window positioning / layout icons
     "arrow_back": 0xE5C4, "arrow_forward": 0xE5C8,
     "arrow_upward": 0xE5D8, "arrow_downward": 0xE5DB,
