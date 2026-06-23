@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# Entorno virtual
+.venv/
+venv/
+
+# macOS
+.DS_Store
+
+# Logs del daemon (la carpeta se conserva via .gitkeep)
+logs/*.log
+logs/*.err
+
+# Herramientas locales (Gentle AI / skill registry)
+.atl/
+
+# Temporales
+*.tmp

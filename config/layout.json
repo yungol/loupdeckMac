@@ -1,0 +1,55 @@
+{
+  "brightness": 1.0,
+  "pages": [
+    {
+      "name": "apps",
+      "background": "#14141a",
+      "left": { "text": "VOL", "color": "#0a7850" },
+      "right": { "text": "APP", "color": "#2a2a40" },
+      "buttons": {
+        "0": { "type": "page", "name": "apps" },
+        "1": { "type": "page", "name": "media" }
+      },
+      "knobs": {
+        "knobTL": {
+          "rotate": { "type": "volume", "step": 5 },
+          "press": { "type": "mute" }
+        }
+      },
+      "keys": [
+        { "index": 0, "label": "Finder",   "icon": "folder",         "color": "#0078d7", "action": { "type": "open", "app": "Finder" } },
+        { "index": 1, "label": "Safari",   "icon": "language",       "color": "#1a8cff", "action": { "type": "open", "app": "Safari" } },
+        { "index": 2, "label": "Terminal", "icon": "terminal",       "color": "#00b478", "action": { "type": "open", "app": "Terminal" } },
+        { "index": 3, "label": "TextEdit", "icon": "edit",           "color": "#ffaa00", "action": { "type": "open", "app": "TextEdit" } },
+        { "index": 4, "label": "Notas",    "icon": "content_paste",  "color": "#ffcc00", "action": { "type": "open", "app": "Notes" } },
+        { "index": 5, "label": "Music",    "icon": "music_note",     "color": "#28d860", "action": { "type": "open", "app": "Music" } },
+        { "index": 6, "label": "Ajustes",  "icon": "settings",       "color": "#8a8a98", "action": { "type": "open", "app": "System Settings" } },
+        { "index": 7, "label": "Mail",     "icon": "mail",           "color": "#5a82dc", "action": { "type": "open", "app": "Mail" } }
+      ]
+    },
+    {
+      "name": "media",
+      "background": "#101018",
+      "left": { "text": "VOL", "color": "#0a7850" },
+      "right": { "text": "MED", "color": "#402a40" },
+      "buttons": {
+        "0": { "type": "page", "name": "apps" },
+        "1": { "type": "page", "name": "media" }
+      },
+      "knobs": {
+        "knobTL": {
+          "rotate": { "type": "volume", "step": 5 },
+          "press": { "type": "mute" }
+        }
+      },
+      "keys": [
+        { "index": 0, "label": "Prev",  "icon": "skip_previous", "color": "#5a5a6e", "action": { "type": "music", "command": "previous" } },
+        { "index": 1, "label": "Play",  "icon": "play_arrow",    "color": "#28d860", "action": { "type": "music", "command": "playpause" } },
+        { "index": 2, "label": "Next",  "icon": "skip_next",     "color": "#5a5a6e", "action": { "type": "music", "command": "next" } },
+        { "index": 3, "label": "Vol -", "icon": "volume_down",   "color": "#3a6a9a", "action": { "type": "volume", "step": -5 } },
+        { "index": 4, "label": "Vol +", "icon": "volume_up",     "color": "#3a6a9a", "action": { "type": "volume", "step": 5 } },
+        { "index": 5, "label": "Mute",  "icon": "volume_off",    "color": "#9a3a4a", "action": { "type": "mute" } }
+      ]
+    }
+  ]
+}

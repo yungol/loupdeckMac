@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.loupdeck.controller</string>
+
+    <!-- Corre el daemon con el Python del venv (ya tiene pyserial/pillow/numpy). -->
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Users/juan/codigo/loupdeck/.venv/bin/python</string>
+        <string>/Users/juan/codigo/loupdeck/scripts/daemon.py</string>
+    </array>
+
+    <key>WorkingDirectory</key>
+    <string>/Users/juan/codigo/loupdeck</string>
+
+    <!-- Arranca al iniciar sesion y se reinicia si se cae. -->
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+
+    <!-- Logs (mira aca si algo falla). -->
+    <key>StandardOutPath</key>
+    <string>/Users/juan/codigo/loupdeck/logs/daemon.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/juan/codigo/loupdeck/logs/daemon.err</string>
+</dict>
+</plist>
