@@ -7,7 +7,7 @@ no sabe nada del device ni de las acciones.
 from __future__ import annotations
 
 import os
-from typing import Optional, Tuple
+from typing import List, Optional, Tuple
 
 from PIL import Image, ImageDraw, ImageFont
 
@@ -19,6 +19,9 @@ _TEXT_FONT_CANDIDATES = (
     "/System/Library/Fonts/Supplemental/Arial.ttf",
     "/System/Library/Fonts/Helvetica.ttc",
 )
+
+GRID_COLS = 24
+GRID_ROWS = 12
 
 
 def _load_text_font(size: int) -> ImageFont.FreeTypeFont:
@@ -42,16 +45,50 @@ class Renderer:
         codepoint: Optional[int],
         color: Color,
         fg: Color = (255, 255, 255),
+        grid: Optional[List[List[int]]] = None,
     ) -> Image.Image:
         img = Image.new("RGB", (KEY_SIZE, KEY_SIZE), color)
         draw = ImageDraw.Draw(img)
-        if codepoint is not None:
+        if grid is not None:
+            self._draw_grid(draw, grid, fg)
+            if label:
+                draw.text((KEY_SIZE // 2, 64), label, font=self.text_font, anchor="mm", fill=fg)
+        elif codepoint is not None:
             draw.text((KEY_SIZE // 2, 33), chr(codepoint), font=self.icon_font, anchor="mm", fill=fg)
             if label:
                 draw.text((KEY_SIZE // 2, 64), label, font=self.text_font, anchor="mm", fill=fg)
         elif label:
             draw.text((KEY_SIZE // 2, KEY_SIZE // 2), label, font=self.text_font, anchor="mm", fill=fg)
         return img
+
+    def _draw_grid(
+        self,
+        draw: ImageDraw.ImageDraw,
+        segments: List[List[int]],
+        fg: Color,
+        cell_size: int = 3,
+    ) -> None:
+        """Dibuja una mini-grilla 24x12 estilo Magnet con los segmentos rellenos."""
+        grid_w = GRID_COLS * cell_size
+        grid_h = GRID_ROWS * cell_size
+        ox = (KEY_SIZE - grid_w) // 2
+        oy = 8
+
+        # Borde tenue de la grilla
+        border = tuple(int(c * 0.35) for c in fg)
+        draw.rectangle([ox, oy, ox + grid_w + 1, oy + grid_h + 1], outline=border)
+
+        # Celdas rellenas segun los segmentos
+        fill_dim = tuple(int(c * 0.5) for c in fg)
+        for seg in segments:
+            x, y, w, h = seg
+            px = ox + 1 + x * cell_size
+            py = oy + 1 + y * cell_size
+            draw.rectangle(
+                [px, py, px + w * cell_size - 1, py + h * cell_size - 1],
+                fill=fg,
+                outline=fill_dim,
+            )
 
     def knob_cell(
         self, codepoint: Optional[int], label: str, color: Color, bg: Color

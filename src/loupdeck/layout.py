@@ -38,6 +38,7 @@ class KeyDef:
     icon: Optional[str] = None
     color: Color = DEFAULT_KEY_COLOR
     action: Optional[Action] = None
+    grid: Optional[List[List[int]]] = None  # [[x,y,w,h], ...] en grilla 24x12
 
 
 @dataclass
@@ -91,6 +92,7 @@ def _parse_page(obj: dict) -> Page:
             icon=k.get("icon"),
             color=_color(k.get("color"), DEFAULT_KEY_COLOR),
             action=Action.from_json(k.get("action")),
+            grid=k.get("grid"),
         )
         for k in obj.get("keys", [])
     ]

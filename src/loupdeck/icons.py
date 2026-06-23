@@ -27,6 +27,18 @@ ICONS = {
     "headphones": 0xF01F, "dns": 0xE875, "extension": 0xE87B,
     "apps": 0xE5C3, "menu": 0xE5D2,
     "auto_awesome": 0xE65F,
+    # Window positioning / layout icons
+    "arrow_back": 0xE5C4, "arrow_forward": 0xE5C8,
+    "arrow_upward": 0xE5D8, "arrow_downward": 0xE5DB,
+    "north_west": 0xF0C5, "north_east": 0xE202,
+    "south_west": 0xEB70, "south_east": 0xEB71,
+    "crop_free": 0xE3C6, "crop_square": 0xE3C8,
+    "center_focus_strong": 0xE3B4, "center_focus_weak": 0xE3B5,
+    "fullscreen": 0xE5D0, "open_in_full": 0xE8E1,
+    "open_with": 0xE89F, "grid_view": 0xE9B0,
+    "dock_to_left": 0xEF3B, "dock_to_right": 0xEF3A,
+    "window": 0xF088, "vertical_split": 0xE949,
+    "horizontal_split": 0xE950,
 }
 
 

@@ -31,7 +31,7 @@
       },
       "keys": [
         { "index": 0, "label": "Finder",   "icon": "folder",         "color": "#0078d7", "action": { "type": "open", "app": "Finder", "new": true } },
-        { "index": 1, "label": "Safari",   "icon": "language",       "color": "#1a8cff", "action": { "type": "open", "app": "Safari" } },
+        { "index": 1, "label": "HiLocal",  "icon": "auto_awesome",   "color": "#888888", "action": { "type": "url", "url": "http://192.168.0.109:5173/" } },
         { "index": 2, "label": "Terminal", "icon": "terminal",       "color": "#00b478", "action": { "type": "open", "app": "Terminal", "new": true } },
         { "index": 3, "label": "TextEdit", "icon": "edit",           "color": "#ffaa00", "action": { "type": "open", "app": "TextEdit" } },
         { "index": 4, "label": "Notas",    "icon": "content_paste",  "color": "#ffcc00", "action": { "type": "open", "app": "Notes" } },
@@ -39,7 +39,9 @@
         { "index": 6, "label": "Ajustes",  "icon": "settings",       "color": "#aab2c2", "action": { "type": "open", "app": "System Settings" } },
         { "index": 7, "label": "Mail",     "icon": "mail",           "color": "#5a82dc", "action": { "type": "open", "app": "Mail" } },
         { "index": 8, "label": "HiPanda",  "icon": "auto_awesome",   "color": "#ff8c00", "action": { "type": "url", "url": "https://app.hipanda.io/" } },
-        { "index": 9, "label": "Gemini",   "icon": "auto_awesome",   "color": "#4285F4", "action": { "type": "url", "url": "https://gemini.google.com/app" } }
+        { "index": 9, "label": "Gemini",   "icon": "auto_awesome",   "color": "#4285F4", "action": { "type": "url", "url": "https://gemini.google.com/app" } },
+        { "index": 10, "label": "Claude",  "icon": "auto_awesome",   "color": "#d97757", "action": { "type": "open", "app": "Claude" } },
+        { "index": 11, "label": "ChatGPT", "icon": "auto_awesome",   "color": "#10a37f", "action": { "type": "url", "url": "https://chatgpt.com/es-419/" } }
       ]
     },
     {
@@ -71,12 +73,15 @@
         }
       },
       "keys": [
-        { "index": 0, "label": "Prev",  "icon": "skip_previous", "color": "#a0a8c0", "action": { "type": "music", "command": "previous" } },
-        { "index": 1, "label": "Play",  "icon": "play_arrow",    "color": "#28d860", "action": { "type": "music", "command": "playpause" } },
-        { "index": 2, "label": "Next",  "icon": "skip_next",     "color": "#a0a8c0", "action": { "type": "music", "command": "next" } },
-        { "index": 3, "label": "Vol -", "icon": "volume_down",   "color": "#4a9aff", "action": { "type": "volume", "step": -5 } },
-        { "index": 4, "label": "Vol +", "icon": "volume_up",     "color": "#4a9aff", "action": { "type": "volume", "step": 5 } },
-        { "index": 5, "label": "Mute",  "icon": "volume_off",    "color": "#ff5a6e", "action": { "type": "mute" } }
+        { "index": 0, "label": "Izquierda", "color": "#4a9aff", "grid": [[0,0,6,12]], "action": { "type": "shell", "command": "osascript -e 'tell application \"System Events\" to keystroke \"w\" using {control down, option down, command down}'" } },
+        { "index": 1, "label": "Centro", "color": "#4a9aff", "grid": [[6,0,12,8]], "action": { "type": "shell", "command": "osascript -e 'tell application \"System Events\" to keystroke \"e\" using {control down, option down, command down}'" } },
+        { "index": 2, "label": "Derecha", "color": "#4a9aff", "grid": [[18,0,6,12]], "action": { "type": "shell", "command": "osascript -e 'tell application \"System Events\" to keystroke \"r\" using {control down, option down, command down}'" } },
+        { "index": 3, "label": "Arr.Der",  "color": "#4a9aff", "grid": [[18,0,6,6]], "action": { "type": "shell", "command": "osascript -e 'tell application \"System Events\" to keystroke \"t\" using {control down, option down, command down}'" } },
+        { "index": 4, "label": "OBS",     "color": "#4a9aff", "grid": [[6,0,12,9]], "action": { "type": "shell", "command": "osascript -e 'tell application \"System Events\" to keystroke \"o\" using {control down, option down, command down}'" } },
+        { "index": 5, "label": "Abj.Izq", "color": "#4a9aff", "grid": [[6,8,6,4]], "action": { "type": "shell", "command": "osascript -e 'tell application \"System Events\" to keystroke \"s\" using {control down, option down, command down}'" } },
+        { "index": 6, "label": "Abj.Cen", "color": "#4a9aff", "grid": [[12,8,6,4]], "action": { "type": "shell", "command": "osascript -e 'tell application \"System Events\" to keystroke \"d\" using {control down, option down, command down}'" } },
+        { "index": 7, "label": "Abj.Der", "color": "#4a9aff", "grid": [[18,6,6,6]], "action": { "type": "shell", "command": "osascript -e 'tell application \"System Events\" to keystroke \"g\" using {control down, option down, command down}'" } },
+        { "index": 9, "label": "Max.",    "color": "#4a9aff", "grid": [[2,1,20,10]], "action": { "type": "shell", "command": "osascript -e 'tell application \"System Events\" to keystroke \"x\" using {control down, option down}'" } }
       ]
     }
   ]

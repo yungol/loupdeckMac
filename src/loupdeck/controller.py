@@ -107,7 +107,8 @@ class Controller:
             row = index // KEY_COLUMNS
             # Fondo oscuro (el de la pagina) + icono/texto en el color de la tecla.
             img = self.renderer.key(
-                key.label, icons.codepoint(key.icon), page.background, fg=key.color
+                key.label, icons.codepoint(key.icon), page.background, fg=key.color,
+                grid=key.grid,
             )
             canvas.paste(img, (60 + col * KEY_SIZE, row * KEY_SIZE))
 
