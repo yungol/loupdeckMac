@@ -37,7 +37,8 @@
         { "index": 4, "label": "Notas",    "icon": "content_paste",  "color": "#ffcc00", "action": { "type": "open", "app": "Notes" } },
         { "index": 5, "label": "Music",    "icon": "music_note",     "color": "#28d860", "action": { "type": "open", "app": "Music" } },
         { "index": 6, "label": "Ajustes",  "icon": "settings",       "color": "#aab2c2", "action": { "type": "open", "app": "System Settings" } },
-        { "index": 7, "label": "Mail",     "icon": "mail",           "color": "#5a82dc", "action": { "type": "open", "app": "Mail" } }
+        { "index": 7, "label": "Mail",     "icon": "mail",           "color": "#5a82dc", "action": { "type": "open", "app": "Mail" } },
+        { "index": 8, "label": "HiPanda",  "icon": "auto_awesome",   "color": "#ff8c00", "action": { "type": "url", "url": "https://app.hipanda.io/" } }
       ]
     },
     {

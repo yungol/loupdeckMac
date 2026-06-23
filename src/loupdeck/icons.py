@@ -26,6 +26,7 @@ ICONS = {
     "camera": 0xE3AF, "map": 0xE55B, "event": 0xE878,
     "headphones": 0xF01F, "dns": 0xE875, "extension": 0xE87B,
     "apps": 0xE5C3, "menu": 0xE5D2,
+    "auto_awesome": 0xE65F,
 }
 
 
