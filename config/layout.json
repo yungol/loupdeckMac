@@ -15,6 +15,18 @@
           "color": "#28d860",
           "rotate": { "type": "volume", "step": 5 },
           "press": { "type": "mute" }
+        },
+        "knobBL": {
+          "icon": "brightness_high",
+          "label": "Luz",
+          "color": "#ffcc00",
+          "rotate": { "type": "brightness", "step": 0.1 }
+        },
+        "knobBR": {
+          "icon": "brightness_high",
+          "label": "LEDs",
+          "color": "#1a8cff",
+          "rotate": { "type": "button_brightness", "step": 0.1 }
         }
       },
       "keys": [
@@ -42,6 +54,18 @@
           "color": "#28d860",
           "rotate": { "type": "volume", "step": 5 },
           "press": { "type": "mute" }
+        },
+        "knobBL": {
+          "icon": "brightness_high",
+          "label": "Luz",
+          "color": "#ffcc00",
+          "rotate": { "type": "brightness", "step": 0.1 }
+        },
+        "knobBR": {
+          "icon": "brightness_high",
+          "label": "LEDs",
+          "color": "#1a8cff",
+          "rotate": { "type": "button_brightness", "step": 0.1 }
         }
       },
       "keys": [

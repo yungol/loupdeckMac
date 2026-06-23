@@ -58,6 +58,8 @@ class Controller:
         self.renderer = renderer
         self.executor = ActionExecutor(runner)
         self.page_index = 0
+        self.brightness = layout.brightness
+        self.button_brightness = 1.0  # factor 0..1 que escala el color de los LEDs 0..7
 
     def stop(self) -> None:
         self.executor.stop()
@@ -125,7 +127,9 @@ class Controller:
             base = binding.color or DEFAULT_BUTTON_COLOR
             action = binding.action
             is_active = action.type == "page" and action.params.get("name") == page.name
-            self.device.set_button_color(i, base if is_active else _dim(base))
+            color = base if is_active else _dim(base)
+            # Escalamos por el factor global de intensidad de los LEDs.
+            self.device.set_button_color(i, _dim(color, self.button_brightness))
 
     # --- ruteo de acciones --------------------------------------------------
     def _run(self, action: Optional[Action], delta: int = 0) -> None:
@@ -136,8 +140,39 @@ class Controller:
         if action.type == "page":
             self._goto(action.params.get("name"))
             return
+        # Brillo del LCD: lo maneja el controller (toca el device, no el SO) y
+        # es no bloqueante (SET_BRIGHTNESS va con wait=False), igual que 'page'.
+        if action.type == "brightness":
+            self._adjust_brightness(action, delta)
+            return
+        if action.type == "button_brightness":
+            self._adjust_button_brightness(action, delta)
+            return
         # El resto va al ejecutor: el hilo lector encola y sigue libre.
         self.executor.submit(action, delta)
+
+    def _adjust_brightness(self, action: Action, delta: int) -> None:
+        """Ajusta el brillo del LCD (grilla 4x3, celdas de perilla y laterales,
+        todo es UN solo panel). Cada click de perilla mueve un 'step'. El minimo
+        se limita a 0.1 a proposito: en 0 el panel se apaga y el usuario no veria
+        para volver a subirlo."""
+        step = float(action.params.get("step", 0.1))
+        amount = step * delta if delta else step
+        self.brightness = max(0.1, min(1.0, self.brightness + amount))
+        self.device.set_brightness(self.brightness)
+        log.info("Brillo: %.0f%%", self.brightness * 100)
+
+    def _adjust_button_brightness(self, action: Action, delta: int) -> None:
+        """Ajusta la intensidad de los LEDs de los botones redondos (0..7).
+        A diferencia del LCD, los LEDs no tienen brillo de hardware: se escala el
+        color RGB antes de enviarlo (via _refresh_button_leds). El minimo es 0
+        (apagarlos del todo es valido y no deja al usuario trabado: la perilla y
+        el LCD siguen visibles)."""
+        step = float(action.params.get("step", 0.1))
+        amount = step * delta if delta else step
+        self.button_brightness = max(0.0, min(1.0, self.button_brightness + amount))
+        self._refresh_button_leds()
+        log.info("Brillo botones: %.0f%%", self.button_brightness * 100)
 
     def _goto(self, name: Optional[str]) -> None:
         if name is None:

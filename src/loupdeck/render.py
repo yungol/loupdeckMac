@@ -48,7 +48,7 @@ class Renderer:
         if codepoint is not None:
             draw.text((KEY_SIZE // 2, 33), chr(codepoint), font=self.icon_font, anchor="mm", fill=fg)
             if label:
-                draw.text((KEY_SIZE // 2, 74), label, font=self.text_font, anchor="mm", fill=fg)
+                draw.text((KEY_SIZE // 2, 64), label, font=self.text_font, anchor="mm", fill=fg)
         elif label:
             draw.text((KEY_SIZE // 2, KEY_SIZE // 2), label, font=self.text_font, anchor="mm", fill=fg)
         return img
