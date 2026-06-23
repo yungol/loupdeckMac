@@ -17,6 +17,7 @@ from PIL import Image
 from .events import ButtonEvent, RotateEvent, TouchEvent, decode_event
 from .graphics import image_to_rgb565_le
 from .protocol import (
+    BUTTONS,
     Command,
     DISPLAY_ID,
     DISPLAYS,
@@ -27,6 +28,9 @@ from .protocol import (
     encode_message,
 )
 from .transport import SerialTransport
+
+# Mapa inverso id-amigable -> byte fisico (ej. boton 0 -> 0x07, knobTL -> 0x01).
+_BUTTON_ID_TO_BYTE = {name: byte for byte, name in BUTTONS.items()}
 
 # Un evento entrante decodificado a nivel protocolo: (command, data).
 Message = Tuple[int, bytes]
@@ -154,6 +158,18 @@ class LoupedeckDevice:
 
     def vibrate(self, pattern: int = 0x01) -> None:
         self.send(Command.SET_VIBRATION, bytes([pattern]), wait=False)
+
+    def set_button_color(self, button_id, color: "Tuple[int, int, int]") -> None:
+        """Enciende el LED de un boton fisico redondo (id 0..7). (0,0,0) = apagado.
+
+        El protocolo usa el byte fisico del boton, no el id amigable (el boton 0
+        es el byte 0x07). SET_COLOR lleva [byte, r, g, b].
+        """
+        byte = _BUTTON_ID_TO_BYTE.get(button_id)
+        if byte is None:
+            return
+        r, g, b = color
+        self.send(Command.SET_COLOR, bytes([byte, int(r), int(g), int(b)]), wait=False)
 
     # --- pantalla -----------------------------------------------------------
     def refresh(self) -> None:

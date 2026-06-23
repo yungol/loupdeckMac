@@ -33,6 +33,8 @@ class Renderer:
         self.icon_font = ImageFont.truetype(str(icon_font_path), icon_size)
         self.text_font = _load_text_font(label_size)
         self.side_font = _load_text_font(16)
+        self.knob_icon_font = ImageFont.truetype(str(icon_font_path), 28)
+        self.knob_label_font = _load_text_font(11)
 
     def key(
         self,
@@ -49,6 +51,20 @@ class Renderer:
                 draw.text((KEY_SIZE // 2, 74), label, font=self.text_font, anchor="mm", fill=fg)
         elif label:
             draw.text((KEY_SIZE // 2, KEY_SIZE // 2), label, font=self.text_font, anchor="mm", fill=fg)
+        return img
+
+    def knob_cell(
+        self, codepoint: Optional[int], label: str, color: Color, bg: Color
+    ) -> Image.Image:
+        """Celda 60x90 al lado de una perilla: icono (+ label opcional) en color."""
+        img = Image.new("RGB", (60, 90), bg)
+        draw = ImageDraw.Draw(img)
+        if codepoint is not None:
+            draw.text((30, 36), chr(codepoint), font=self.knob_icon_font, anchor="mm", fill=color)
+            if label:
+                draw.text((30, 68), label, font=self.knob_label_font, anchor="mm", fill=color)
+        elif label:
+            draw.text((30, 45), label, font=self.knob_label_font, anchor="mm", fill=color)
         return img
 
     def side(self, text: str, color: Color, fg: Color = (255, 255, 255)) -> Image.Image:

@@ -44,6 +44,15 @@ class KeyDef:
 class KnobDef:
     rotate: Optional[Action] = None
     press: Optional[Action] = None
+    icon: Optional[str] = None       # icono a mostrar en la franja lateral
+    label: str = ""                  # texto corto debajo del icono
+    color: Optional[Color] = None    # color del icono/texto
+
+
+@dataclass
+class ButtonDef:
+    action: Optional[Action] = None
+    color: Optional[Color] = None  # color del LED; None = usa el default del controller
 
 
 @dataclass
@@ -58,7 +67,7 @@ class Page:
     background: Color = DEFAULT_BG
     keys: List[KeyDef] = field(default_factory=list)
     knobs: Dict[str, KnobDef] = field(default_factory=dict)
-    buttons: Dict[int, Action] = field(default_factory=dict)
+    buttons: Dict[int, ButtonDef] = field(default_factory=dict)
     left: Optional[SideDef] = None
     right: Optional[SideDef] = None
 
@@ -90,15 +99,28 @@ def _parse_page(obj: dict) -> Page:
         name: KnobDef(
             rotate=Action.from_json(cfg.get("rotate")),
             press=Action.from_json(cfg.get("press")),
+            icon=cfg.get("icon"),
+            label=cfg.get("label", ""),
+            color=_color(cfg["color"], DEFAULT_KEY_COLOR) if cfg.get("color") else None,
         )
         for name, cfg in obj.get("knobs", {}).items()
     }
 
-    buttons = {
-        int(idx): Action.from_json(cfg)
-        for idx, cfg in obj.get("buttons", {}).items()
-        if Action.from_json(cfg) is not None
-    }
+    def _button(cfg) -> Optional[ButtonDef]:
+        if not cfg:
+            return None
+        # Forma rica: {"color": "#..", "action": {...}}.
+        if "action" in cfg or ("color" in cfg and "type" not in cfg):
+            color = _color(cfg["color"], DEFAULT_KEY_COLOR) if cfg.get("color") else None
+            return ButtonDef(action=Action.from_json(cfg.get("action")), color=color)
+        # Forma simple (legacy): el cfg ES la accion.
+        return ButtonDef(action=Action.from_json(cfg), color=None)
+
+    buttons = {}
+    for idx, cfg in obj.get("buttons", {}).items():
+        bd = _button(cfg)
+        if bd is not None:
+            buttons[int(idx)] = bd
 
     def _side(cfg) -> Optional[SideDef]:
         if not cfg:

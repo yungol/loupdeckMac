@@ -28,6 +28,20 @@ from .render import Renderer
 log = logging.getLogger("loupdeck.controller")
 
 KEYS_PER_PAGE = KEY_COLUMNS * KEY_ROWS
+NUM_BUTTONS = 8  # botones redondos fisicos (0..7)
+DEFAULT_BUTTON_COLOR = (120, 120, 140)  # LED si el boton tiene accion pero no color
+LED_OFF = (0, 0, 0)
+DIM_FACTOR = 0.22  # cuanto se atenua el LED de una grilla disponible pero no activa
+
+# Posicion (x, y) de la celda de cada perilla en la pantalla (3 izquierda, 3 derecha).
+KNOB_SLOTS = {
+    "knobTL": (0, 0), "knobCL": (0, 90), "knobBL": (0, 180),
+    "knobTR": (420, 0), "knobCR": (420, 90), "knobBR": (420, 180),
+}
+
+
+def _dim(color, factor: float = DIM_FACTOR):
+    return tuple(int(c * factor) for c in color)
 
 
 class Controller:
@@ -69,10 +83,18 @@ class Controller:
         # 15 dibujos sueltos (el firmware muestra cada uno apenas llega).
         canvas = Image.new("RGB", (480, 270), page.background)
 
-        if page.left:
-            canvas.paste(self.renderer.side(page.left.text, page.left.color), (0, 0))
-        if page.right:
-            canvas.paste(self.renderer.side(page.right.text, page.right.color), (420, 0))
+        # Una celda por perilla configurada (con icono/label); el resto, vacio.
+        for knob_id, (x, y) in KNOB_SLOTS.items():
+            knob = page.knobs.get(knob_id)
+            if knob is None or (knob.icon is None and not knob.label):
+                continue
+            cell = self.renderer.knob_cell(
+                icons.codepoint(knob.icon),
+                knob.label,
+                knob.color or DEFAULT_BUTTON_COLOR,
+                page.background,
+            )
+            canvas.paste(cell, (x, y))
 
         keymap: Dict[int, KeyDef] = {k.index: k for k in page.keys}
         for index in range(KEYS_PER_PAGE):
@@ -81,11 +103,29 @@ class Controller:
                 continue
             col = index % KEY_COLUMNS
             row = index // KEY_COLUMNS
-            img = self.renderer.key(key.label, icons.codepoint(key.icon), key.color)
+            # Fondo oscuro (el de la pagina) + icono/texto en el color de la tecla.
+            img = self.renderer.key(
+                key.label, icons.codepoint(key.icon), page.background, fg=key.color
+            )
             canvas.paste(img, (60 + col * KEY_SIZE, row * KEY_SIZE))
 
         self.device.draw_image("full", canvas, refresh=True)
+        self._refresh_button_leds()
         log.info("Pagina '%s' dibujada en %.0f ms", page.name, (time.time() - t0) * 1000)
+
+    def _refresh_button_leds(self) -> None:
+        """Enciende los LEDs de los botones: pleno si su grilla es la activa,
+        tenue si tiene grilla pero no es la actual, apagado si no tiene nada."""
+        page = self.page
+        for i in range(NUM_BUTTONS):
+            binding = page.buttons.get(i)
+            if binding is None or binding.action is None:
+                self.device.set_button_color(i, LED_OFF)
+                continue
+            base = binding.color or DEFAULT_BUTTON_COLOR
+            action = binding.action
+            is_active = action.type == "page" and action.params.get("name") == page.name
+            self.device.set_button_color(i, base if is_active else _dim(base))
 
     # --- ruteo de acciones --------------------------------------------------
     def _run(self, action: Optional[Action], delta: int = 0) -> None:
@@ -128,7 +168,9 @@ class Controller:
             return
         # Boton redondo (0..7): accion definida en la pagina.
         if isinstance(event.id, int):
-            self._run(self.page.buttons.get(event.id))
+            binding = self.page.buttons.get(event.id)
+            if binding is not None:
+                self._run(binding.action)
 
     def _on_rotate(self, event: RotateEvent) -> None:
         knob = self.page.knobs.get(event.id) if isinstance(event.id, str) else None
