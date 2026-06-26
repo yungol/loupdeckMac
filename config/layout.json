@@ -6,7 +6,8 @@
       "background": "#14141a",
       "buttons": {
         "0": { "color": "#1a8cff", "action": { "type": "page", "name": "apps" } },
-        "1": { "color": "#28d860", "action": { "type": "page", "name": "media" } }
+        "1": { "color": "#28d860", "action": { "type": "page", "name": "media" } },
+        "2": { "color": "#ff3b30", "action": { "type": "page", "name": "obs" } }
       },
       "knobs": {
         "knobTL": {
@@ -56,7 +57,8 @@
       "background": "#101018",
       "buttons": {
         "0": { "color": "#1a8cff", "action": { "type": "page", "name": "apps" } },
-        "1": { "color": "#28d860", "action": { "type": "page", "name": "media" } }
+        "1": { "color": "#28d860", "action": { "type": "page", "name": "media" } },
+        "2": { "color": "#ff3b30", "action": { "type": "page", "name": "obs" } }
       },
       "knobs": {
         "knobTL": {
@@ -96,6 +98,51 @@
         { "index": 6, "label": "Abj.Cen", "color": "#4a9aff", "grid": [[12,8,6,4]], "action": { "type": "shell", "command": "osascript -e 'tell application \"System Events\" to keystroke \"d\" using {control down, option down, command down}'" } },
         { "index": 7, "label": "Abj.Der", "color": "#4a9aff", "grid": [[18,6,6,6]], "action": { "type": "shell", "command": "osascript -e 'tell application \"System Events\" to keystroke \"g\" using {control down, option down, command down}'" } },
         { "index": 9, "label": "Max.",    "color": "#4a9aff", "grid": [[2,1,20,10]], "action": { "type": "shell", "command": "osascript -e 'tell application \"System Events\" to keystroke \"x\" using {control down, option down}'" } }
+      ]
+    },
+    {
+      "name": "obs",
+      "background": "#0f0f14",
+      "buttons": {
+        "0": { "color": "#1a8cff", "action": { "type": "page", "name": "apps" } },
+        "1": { "color": "#28d860", "action": { "type": "page", "name": "media" } },
+        "2": { "color": "#ff3b30", "action": { "type": "page", "name": "obs" } }
+      },
+      "knobs": {
+        "knobTL": {
+          "icon": "volume_up",
+          "label": "Vol",
+          "color": "#28d860",
+          "rotate": { "type": "volume", "step": 5 },
+          "press": { "type": "mute" }
+        },
+        "knobBL": {
+          "icon": "brightness_high",
+          "label": "Luz",
+          "color": "#ffcc00",
+          "rotate": { "type": "brightness", "step": 0.1 }
+        },
+        "knobBR": {
+          "icon": "brightness_high",
+          "label": "LEDs",
+          "color": "#1a8cff",
+          "rotate": { "type": "button_brightness", "step": 0.1 }
+        },
+        "knobTR": {
+          "icon": "zoom_in",
+          "label": "Zoom",
+          "color": "#a06cff",
+          "rotate": { "type": "zoom", "step": 1 },
+          "press": { "type": "zoom_reset" }
+        }
+      },
+      "keys": [
+        { "index": 0, "label": "Rec",      "icon": "videocam",        "color": "#ff3b30", "action": { "type": "obs", "command": "toggle_record" } },
+        { "index": 4, "label": "Camara",   "icon": "camera",          "color": "#1a8cff", "action": { "type": "obs", "command": "set_scene", "scene": "CamaraEscena" } },
+        { "index": 5, "label": "GoPro",    "icon": "photo_camera",    "color": "#ffcc00", "action": { "type": "obs", "command": "set_scene", "scene": "GoProEscena" } },
+        { "index": 6, "label": "Logitech", "icon": "desktop_windows", "color": "#28d860", "action": { "type": "obs", "command": "set_scene", "scene": "LogitechScene" } },
+        { "index": 7, "label": "Pantalla", "icon": "computer",        "color": "#a06cff", "action": { "type": "obs", "command": "set_scene", "scene": "pantalla" } },
+        { "index": 8, "label": "Celular",  "icon": "call",            "color": "#ff8c00", "action": { "type": "obs", "command": "set_scene", "scene": "Celular" } }
       ]
     }
   ]

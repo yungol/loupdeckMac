@@ -12,6 +12,8 @@ Tipos soportados:
   music   {"command": "playpause|next|previous"}  -> controla la app Music
   zoom        {"step": 1}                         -> zoom de pantalla del sistema (usa delta)
    zoom_reset  {}                              -> vuelve el zoom de pantalla al 100% (toggle Cmd+Shift+8 x2)
+  obs     {"command": "start_record|stop_record|toggle_record|set_scene", "scene": "..."}
+                                                 -> controla OBS via WebSocket (no usa atajos de teclado)
 """
 
 from __future__ import annotations
@@ -58,6 +60,8 @@ def _osascript(script: str) -> str:
 
 
 class MacActionRunner(ActionRunner):
+    _obs = None  # cliente WebSocket OBS perezoso; se reconecta si OBS reinicia
+
     def run(self, action: Action, delta: int = 0) -> None:
         handler = getattr(self, f"_do_{action.type}", None)
         if handler is None:
@@ -137,3 +141,38 @@ class MacActionRunner(ActionRunner):
         verb = mapping.get(cmd)
         if verb:
             _osascript(f'tell application "Music" to {verb}')
+
+    # --- OBS via WebSocket --------------------------------------------------
+    # En macOS los atajos de teclado de OBS solo se capturan si OBS tiene el
+    # foco o permiso de Accesibilidad; el WebSocket (incorporado en OBS 28+) no
+    # depende de eso y nunca colisiona con otros atajos del sistema.
+    def _obs_client(self):
+        if self._obs is not None:
+            return self._obs
+        import obsws_python as obsws
+
+        self._obs = obsws.ReqClient(host="localhost", port=4455, timeout=5)
+        return self._obs
+
+    def _do_obs(self, params: dict, delta: int) -> None:
+        cmd = params.get("command", "")
+        # Dos intentos: si la conexion murio (OBS reiniciado), se reconecta.
+        for attempt in (1, 2):
+            try:
+                cl = self._obs_client()
+                if cmd == "start_record":
+                    if not cl.get_record_status().output_active:
+                        cl.start_record()
+                elif cmd == "stop_record":
+                    if cl.get_record_status().output_active:
+                        cl.stop_record()
+                elif cmd == "toggle_record":
+                    cl.toggle_record()
+                elif cmd == "set_scene":
+                    cl.set_current_program_scene(params["scene"])
+                else:
+                    log.warning("Comando obs desconocido: %s", cmd)
+                return
+            except Exception as exc:
+                log.warning("OBS '%s' fallo (intento %d): %s", cmd, attempt, exc)
+                self._obs = None  # fuerza reconexion en el proximo intento
